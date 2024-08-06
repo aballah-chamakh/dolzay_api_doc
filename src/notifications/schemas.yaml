@@ -57,35 +57,7 @@ NotificationsListResponse :
           $ref: '#/components/schemas/NotificationsList'
 
 
-MicroProcessId : 
-  type : object
-  properties : 
-    micro_process_id : 
-      type : integer
 
-
-MicroProcessIdResponse : 
-  allOf:
-    - $ref: '#/components/schemas/BaseResponse'
-    - type: object
-      properties : 
-        data : 
-          $ref: '#/components/schemas/MicroProcessId'
-
-
-MicroProcessState : 
-  type : object 
-  properties : 
-    finished :
-      type : false 
-
-MicroProcessStateResponse : 
-  allOf:
-    - $ref: '#/components/schemas/BaseResponse'
-    - type: object
-      properties : 
-        data : 
-          $ref: '#/components/schemas/MicroProcessState'
 
 
 

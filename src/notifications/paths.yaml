@@ -1,7 +1,7 @@
 /notifications/overview/:
   get:
     summary: Notifications overview
-    description : it returns the the number of all of the notification and it indicates if there is unread notification
+    description : It returns the the number of all of the notifications and it indicates if there is unread notifications
     responses:
       '200':
         description: 200 response
@@ -26,25 +26,31 @@
 
 /notifications/list/:
   get:
-    summary: Dormant orders notifications list 
-    description : It returns the notifications list of the type specified in the query parameter parameter 
+    summary: "[Type] notifications list"
+    description : It returns the notifications list of the type specified in the query parameter but if there is a micro process running it returns his state
     parameters:
       - in: query
         name: type
         schema:
           type: string
-          enum: [dormant_orders,config_errors]
+          enum: 
+            - dormant_orders 
+            - config_errors
         required: true
     responses:
       '200':
         description: 200 response
         content:
           application/json:
-            schema:  
-              $ref: '#/components/schemas/NotificationsListResponse'
-            examples : 
-              NotificationsOverview : 
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/NotificationsListResponse'
+                - $ref: '#/components/schemas/MicroProcessState'
+            examples:
+              NotificationsList:
                 $ref: '#/components/examples/NotificationsListResponseExample'
+              MicroProcessState:
+                $ref: '#/components/examples/MicroProcessStateRedirectionResponseExample'
       '401':
         description: 401 response
         content:
@@ -59,6 +65,8 @@
 
 /notifications/mark_all_as_read/:
   put:
+    summary: Mark all notifications as read
+    description : It marks all of the unread notifications of the dormant orders and the config errors as read 
     requestBody:
       required: true
       content:
@@ -76,7 +84,7 @@
             schema:  
               $ref: '#/components/schemas/BaseResponse'
             examples : 
-              NotificationsOverview : 
+              MarkAllAsReadResponse : 
                 $ref: '#/components/examples/MarkAllAsReadResponseExample'
       '401':
         description: 401 response

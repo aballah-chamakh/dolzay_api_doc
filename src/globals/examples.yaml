@@ -60,8 +60,17 @@ CarrierCredentialsUnauthorizedResponseExample :
 
 
   
-MicroProcessStateResponseExample : 
-  status : "success"
-  data : 
-    finished : false
-  msg : ""
+MicroProcessStateSuccessResponseExample : 
+  value : 
+    status : "success"
+    data : 
+      finished : false
+    msg : ""
+
+
+MicroProcessStateRedirectionResponseExample : 
+  value : 
+    status : "redirection"
+    data : 
+      finished : false
+    msg : ""

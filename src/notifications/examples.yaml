@@ -4,6 +4,7 @@ NotificationsOverviewResponseExample :
     data :  
       notifs_cnt : 50 
       has_unread_notifs : true 
+    msg : ""
 
 NotificationsListResponseExample :
   value : 
@@ -31,8 +32,9 @@ NotificationsListResponseExample :
           message : "all the zones must cover collectively all of Tunisia" 
           created_at : "12:35:41 12/01/2024"
           viewed : false  
-
+    msg : ""
 MarkAllAsReadResponseExample : 
-  status : "sucees"
-  msg : "the process of marking all of the [type] notifications as read has just started"
+  value : 
+    status : "sucees"
+    msg : "the process of marking all of the [type] notifications as read has just started"
 

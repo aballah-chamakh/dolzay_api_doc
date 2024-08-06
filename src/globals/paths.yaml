@@ -1,15 +1,15 @@
 /micro_process_state/:
   get:
-    summary: get the state of the micro process
-    description : It returns of the requested micro process which depend to the resource and the resource id for some cases
+    summary: Micro process state
+    description : It returns the state of the requested micro process which is identified by the resource name and the resource id in some cases
     parameters:
       - in: query
-        name: rsource
+        name: resource
         schema:
           type: string
         required: true
       - in: query
-        name: rsource_id
+        name: resource_id
         schema:
           type: integer
         required: true
@@ -21,8 +21,8 @@
             schema:  
               $ref: '#/components/schemas/MicroProcessStateResponse'
             examples : 
-              NotificationsOverview : 
-                $ref: '#/components/examples/MicroProcessStateResponseExample'
+              MicroProcessState : 
+                $ref: '#/components/examples/MicroProcessStateSuccessResponseExample'
       '401':
         description: 401 response
         content:

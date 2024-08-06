@@ -21,6 +21,9 @@ openApiDoc.components.examples = {};
 for(let i=0;i<modules.length;i++) {
 
     let moduleName = modules[i]
+    if(moduleName == "lock"){
+        continue ; 
+    }
 
     let modulePaths = yaml.load(fs.readFileSync('src/'+moduleName+'/paths.yaml', 'utf8'));
     openApiDoc.paths = {...openApiDoc.paths,...modulePaths};
