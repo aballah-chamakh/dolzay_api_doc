@@ -1,0 +1,91 @@
+/notifications/overview/:
+  get:
+    summary: Notifications overview
+    description : it returns the the number of all of the notification and it indicates if there is unread notification
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:  
+              $ref: '#/components/schemas/NotificationsOverviewResponse'
+            examples : 
+              NotificationsOverview : 
+                $ref: '#/components/examples/NotificationsOverviewResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+
+/notifications/list/:
+  get:
+    summary: Dormant orders notifications list 
+    description : It returns the notifications list of the type specified in the query parameter parameter 
+    parameters:
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum: [dormant_orders,config_errors]
+        required: true
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:  
+              $ref: '#/components/schemas/NotificationsListResponse'
+            examples : 
+              NotificationsOverview : 
+                $ref: '#/components/examples/NotificationsListResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+
+/notifications/mark_all_as_read/:
+  put:
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type : string 
+            enum : [dormant_orders,config_errors]
+          example :
+            type : dormant_orders
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:  
+              $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              NotificationsOverview : 
+                $ref: '#/components/examples/MarkAllAsReadResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'

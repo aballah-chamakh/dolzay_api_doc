@@ -1,0 +1,45 @@
+BaseResponse :
+  type: object
+  properties:
+    status:
+      type: string
+      enum : 
+        - success 
+        - error 
+        - redirection
+        - unauthorized
+        - bad request 
+    msg : 
+      type : string 
+
+
+NotificationsOverviewResponse : 
+  type : object 
+  properties:
+    status : 
+      type : string 
+    data : 
+      type : object  
+      properties :
+        notifications_cnt : 
+          type : integer
+        has_unread_notifications : 
+          type : boolean  
+    msg : 
+      type : string 
+
+MicroProcessState : 
+  type : object 
+  properties :
+    finished : 
+      type : boolean  
+
+
+MicroProcessStateResponse :
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/MicroProcessState'
+

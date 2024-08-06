@@ -1,0 +1,96 @@
+NotificationsOverview :
+  type : object
+  properties : 
+    notifs_cnt : 
+      type : integer
+    has_unread_notifs : 
+      type : boolean
+
+NotificationsOverviewResponse : 
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/NotificationsOverview'
+
+
+NotificationsList : 
+  type : object
+  properties : 
+    all_notifs_cnt : 
+      type : integer 
+      description : the number of all of the notifications (dormant orders + config errors)
+    all_dormant_orders_notifs_cnt : 
+      type : integer
+      description : the number of all of the dormant orders notifications
+    all_config_errors_notifs_cnt : 
+      type : integer
+      description : the number of all of the config errors notifications
+    read_notifs_cnt : 
+      type  : integer 
+      description : the number of read dormant orders or config errors notifications
+    unread_notifs_cnt : 
+      type  : integer 
+      description : the number of unread dormant orders or config errors notifications
+    notifications : 
+      type : array 
+      items : 
+        type : object 
+        properties : 
+          pathname : 
+            type : string 
+            description : the link of the dormant order or the config error
+          message : 
+            type : string 
+          created_at : 
+            type : string 
+          viewed : 
+            type : boolean 
+
+NotificationsListResponse : 
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/NotificationsList'
+
+
+MicroProcessId : 
+  type : object
+  properties : 
+    micro_process_id : 
+      type : integer
+
+
+MicroProcessIdResponse : 
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/MicroProcessId'
+
+
+MicroProcessState : 
+  type : object 
+  properties : 
+    finished :
+      type : false 
+
+MicroProcessStateResponse : 
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/MicroProcessState'
+
+
+
+
+
+
+
+    

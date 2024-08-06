@@ -1,0 +1,192 @@
+/lock/state/:
+  get:
+    summary: Get the state of the lock
+    description : it returns the state of the lock and his waiting lists but if user did lock the plugin,
+                   it inform him
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:  
+              oneOf : 
+                - $ref: '#/components/schemas/LockStateResponse'
+                - $ref: '#/components/schemas/LockedResponse'
+            examples : 
+              LockState : 
+                $ref: '#/components/examples/LockStateSuccessResponseExample'
+              Locked : 
+                $ref: '#/components/examples/LockedRedirectionResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+                          
+/lock/lock_the_plugin/ : 
+  put:
+    summary: Lock the plugin
+    description: "For the employees : <br/><br/>
+                  it locks the plugin for the requesting employee and returns a confirmation for that but if someone else did lock the plugin before him, 
+                  it reserves for him a place in the waiting list of employees and returns the lock state <br/><br/><br/>
+                For the admins : <br/><br/>
+                  it has the same behavior of the employee case, with the ability to forcibly lock the plugin by the requesting admin if the user locking the plugin is not an admin by setting as_admin=true"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LockingMode'
+          examples :
+            LockingUser : 
+              $ref: '#/components/examples/LockingModeExample'
+    responses:
+      '200':
+        description: 200 response 
+        content:
+          application/json:
+            schema:  
+              oneOf : 
+                - $ref: '#/components/schemas/LockedResponse'
+                - $ref: '#/components/schemas/LockStateResponse'
+            examples : 
+              Locked : 
+                $ref: '#/components/examples/LockedSuccessResponseExample'
+              LockState : 
+                $ref: '#/components/examples/LockStateRedirectionResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+              LockPluginForciblyUnauthorized : 
+                 $ref: '#/components/examples/LockPluginForciblyUnauthorizedResponseExample'
+
+/lock/unlock_the_plugin/ : 
+  put:
+    summary: Unlock the plugin
+    description: Unlock the plugin by the user who is locking the plugin, and if we have someone in the waiting list lock the plugin by him
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:  
+              $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              SuccessBaseResponse : 
+                $ref: '#/components/examples/SuccessBaseResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+              LockUnauthorized : 
+                $ref: '#/components/examples/LockUnauthorizedResponseExample'
+      '403':
+        description: 403 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/ExistingRequestRunningResponseExample'
+
+/lock/reserve_a_place/ : 
+  put:
+    summary: reserve a place in the waiting list 
+    description: it reserves a place in the waiting list that correspond to the position of the requesting user (admin or employee),
+                 but if it found that the plugin isn't locked and the waiting lists are empty it lock it by the requesting user
+    responses:
+      '200':
+        description: Success response
+        content:
+          application/json:
+            schema:  
+              oneOf : 
+                - $ref: '#/components/schemas/LockStateResponse'
+                - $ref: '#/components/schemas/LockedResponse'
+            examples : 
+              LockState : 
+                $ref: '#/components/examples/LockStateSuccessResponseExample'
+              Locked : 
+                $ref: '#/components/examples/LockedSuccessResponseExample'
+
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+      '400':
+        description: 400 response
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              AlreadyReserved : 
+                $ref: '#/components/examples/AlreadyReservedResponseExample'
+      '403' : 
+        description: 403 response
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              AlreadyReserved : 
+                $ref: '#/components/examples/ReserveWhileLockingResponseExample'
+
+/lock/cancel_reserving_a_place/ : 
+  put:
+    summary: cancel my reserved place
+    description: it cancel the reserved place of the requesting user and it returns the lock state but if it found the requesting user already did lock the plugin , it tells him that you did lock the plugin
+    responses:
+      '200':
+        description: Success response
+        content:
+          application/json:
+            schema:  
+              oneOf : 
+                - $ref: '#/components/schemas/LockStateResponse'
+                - $ref: '#/components/schemas/LockedResponse'
+            examples : 
+              LockState : 
+                $ref: '#/components/examples/LockStateSuccessResponseExample'
+              Locked : 
+                $ref: '#/components/examples/LockedRedirectionResponseExample'
+      '401':
+        description: 401 response
+        content:
+          application/json:
+            schema:   
+                $ref: '#/components/schemas/BaseResponse'
+            examples : 
+              Unauthenticated : 
+                $ref: '#/components/examples/UnauthenticatedResponseExample'
+              PluginUnauthorized : 
+                $ref: '#/components/examples/PluginUnauthorizedResponseExample'

@@ -1,0 +1,38 @@
+NotificationsOverviewResponseExample : 
+  value : 
+    status : "success"
+    data :  
+      notifs_cnt : 50 
+      has_unread_notifs : true 
+
+NotificationsListResponseExample :
+  value : 
+    status : "success"
+    data :  
+      all_notifs_cnt : 50
+      all_dormant_orders_notifs_cnt : 25
+      all_config_errors_notifs_cnt : 25 
+      read_notifs_cnt : 5
+      unread_notifs_cnt : 20 
+      notifications : 
+        - pathname : /orders/10/
+          message : " this order is dormant" 
+          created_at : "12:35:41 12/01/2024"
+          viewed : false  
+        - pathname : /carrier/2/
+          message : "the carrier _____ must has at least 2 exit states" 
+          created_at : "12:35:41 12/01/2024"
+          viewed : false  
+        - pathname : /zone/2/
+          message : "the carriers of the zone ____ must collectively cover 100% of the volumes coming to this zone" 
+          created_at : "12:35:41 12/01/2024"
+          viewed : false  
+        - pathname : /zones/
+          message : "all the zones must cover collectively all of Tunisia" 
+          created_at : "12:35:41 12/01/2024"
+          viewed : false  
+
+MarkAllAsReadResponseExample : 
+  status : "sucees"
+  msg : "the process of marking all of the [type] notifications as read has just started"
+

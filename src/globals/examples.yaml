@@ -1,0 +1,67 @@
+SuccessBaseResponseExample :
+  value : 
+    status : "success"
+    msg : "" 
+
+ErrorBaseResponseExample :
+  value : 
+    status : "error"
+    msg : ""
+
+UnauthenticatedResponseExample : 
+  value : 
+    status : "unauthorized"
+    msg : "you are not authenticated to do this action" 
+
+PluginUnauthorizedResponseExample :  
+  value : 
+    status : "unauthorized"
+    msg : "you don't have the permission to access the plugin" 
+
+
+LockUnauthorizedResponseExample :  
+  value : 
+    status : "unauthorized"
+    msg : "you are not the one locking the plugin to perform this action" 
+
+
+NotificationsOverviewResponseExample : 
+  value :
+    status : "success"
+    data : 
+      notifications_cnt : 10 
+      has_unread_notifications : true 
+    msg : ""
+  
+
+
+
+OrderListUnauthorizedResponseExample :  
+  value : 
+    status : "unauthorized"
+    msg : "you are not authorized to access the order list"
+
+OrderManagementUnauthorizedResponseExample :  
+  value : 
+    status : "unauthorized"
+    msg : "you are not authorized to access the order management" 
+
+CarrierListUnauthorizedResponseExample :  
+  value : 
+    status : "unauthorized"
+    msg : "you are not authorized to access the carrier list" 
+
+CarrierCredentialsUnauthorizedResponseExample : 
+  value : 
+    status : "unauthorized"
+    msg : "you are not authorized to access the credentials of the carrier"
+
+
+
+
+  
+MicroProcessStateResponseExample : 
+  status : "success"
+  data : 
+    finished : false
+  msg : ""

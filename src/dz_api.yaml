@@ -1,0 +1,430 @@
+openapi: 3.0.0
+info :
+  title: Dolzay plugin Api
+  description: Documentation for the dolzay plugin Api
+  version: 1.0.0
+servers:
+  - url: http://localhost/prestashop/dz/
+paths:
+  /notifications/overview/:
+    get:
+      summary: Get notifications overview
+      description: it returns the number of notifications with unresolved problems
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationsOverviewResponse'
+              examples:
+                NotificationsOverview:
+                  $ref: '#/components/examples/NotificationsOverviewResponseExample'
+  /lock/state/:
+    get:
+      summary: Get the state of the lock
+      description: >-
+        it returns the state of the lock and his waiting lists but if user did
+        lock the plugin, it inform him
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LockStateResponse'
+                  - $ref: '#/components/schemas/LockedResponse'
+              examples:
+                LockState:
+                  $ref: '#/components/examples/LockStateSuccessResponseExample'
+                Locked:
+                  $ref: '#/components/examples/LockedRedirectionResponseExample'
+        '401':
+          description: 401 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                Unauthenticated:
+                  $ref: '#/components/examples/UnauthenticatedResponseExample'
+                PluginUnauthorized:
+                  $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+  /lock/lock_the_plugin/:
+    put:
+      summary: Lock the plugin
+      description: >-
+        For the employees : <br/><br/> it locks the plugin for the requesting
+        employee and returns a confirmation for that but if someone else did
+        lock the plugin before him,  it reserves for him a place in the waiting
+        list of employees and returns the lock state <br/><br/><br/> For the
+        admins : <br/><br/> it has the same behavior of the employee case, with
+        the ability to forcibly lock the plugin by the requesting admin if the
+        user locking the plugin is not an admin by setting as_admin=true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockingMode'
+            examples:
+              LockingUser:
+                $ref: '#/components/examples/LockingModeExample'
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LockedResponse'
+                  - $ref: '#/components/schemas/LockStateResponse'
+              examples:
+                Locked:
+                  $ref: '#/components/examples/LockedSuccessResponseExample'
+                LockState:
+                  $ref: '#/components/examples/LockStateRedirectionResponseExample'
+        '401':
+          description: 401 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                Unauthenticated:
+                  $ref: '#/components/examples/UnauthenticatedResponseExample'
+                PluginUnauthorized:
+                  $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+                LockPluginForciblyUnauthorized:
+                  $ref: >-
+                    #/components/examples/LockPluginForciblyUnauthorizedResponseExample
+  /lock/unlock_the_plugin/:
+    put:
+      summary: Unlock the plugin
+      description: >-
+        Unlock the plugin by the user who is locking the plugin, and if we have
+        someone in the waiting list lock the plugin by him
+      responses:
+        '200':
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                SuccessBaseResponse:
+                  $ref: '#/components/examples/SuccessBaseResponseExample'
+        '401':
+          description: 401 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                Unauthenticated:
+                  $ref: '#/components/examples/UnauthenticatedResponseExample'
+                PluginUnauthorized:
+                  $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+                LockUnauthorized:
+                  $ref: '#/components/examples/LockUnauthorizedResponseExample'
+        '403':
+          description: 403 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                Unauthenticated:
+                  $ref: '#/components/examples/ExistingRequestRunningResponseExample'
+  /lock/reserve_a_place/:
+    put:
+      summary: reserve a place in the waiting list
+      description: >-
+        it reserves a place in the waiting list that correspond to the position
+        of the requesting user (admin or employee), but if it found that the
+        plugin isn't locked and the waiting lists are empty it lock it by the
+        requesting user
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LockStateResponse'
+                  - $ref: '#/components/schemas/LockedResponse'
+              examples:
+                LockState:
+                  $ref: '#/components/examples/LockStateSuccessResponseExample'
+                Locked:
+                  $ref: '#/components/examples/LockedSuccessResponseExample'
+        '400':
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                AlreadyReserved:
+                  $ref: '#/components/examples/AlreadyReservedResponseExample'
+        '401':
+          description: 401 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                Unauthenticated:
+                  $ref: '#/components/examples/UnauthenticatedResponseExample'
+                PluginUnauthorized:
+                  $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+        '403':
+          description: 403 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                AlreadyReserved:
+                  $ref: '#/components/examples/ReserveWhileLockingResponseExample'
+  /lock/cancel_reserving_a_place/:
+    put:
+      summary: cancel reserving the place of the user from the waiting list
+      description: >-
+        it cancel reserving the place of the user and it returns the lock state
+        but if it found the user already did lock the plugin , it tells the user
+        that the plugin is locked for him
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LockStateResponse'
+                  - $ref: '#/components/schemas/LockedResponse'
+              examples:
+                LockState:
+                  $ref: '#/components/examples/LockStateSuccessResponseExample'
+                Locked:
+                  $ref: '#/components/examples/LockedRedirectionResponseExample'
+        '401':
+          description: 401 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                Unauthenticated:
+                  $ref: '#/components/examples/UnauthenticatedResponseExample'
+                PluginUnauthorized:
+                  $ref: '#/components/examples/PluginUnauthorizedResponseExample'
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - error
+            - redirection
+            - unauthorized
+            - bad request
+        msg:
+          type: string
+    NotificationsOverviewResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            notifications_cnt:
+              type: integer
+            has_unread_notifications:
+              type: boolean
+        msg:
+          type: string
+    LockState:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+            - locked
+            - unlocked
+          description: Indicates whether the plugin is locked or unlocked.
+        locked_by:
+          type: object
+          properties:
+            fullname:
+              type: string
+              description: Full name of the person who locked the plugin.
+            session_id:
+              type: string
+              description: Session ID of the person who locked the plugin.
+            is_admin:
+              type: boolean
+              description: Indicates if the person who locked the plugin is an admin.
+        admin_waiting_list:
+          type: array
+          items:
+            type: object
+            properties:
+              fullname:
+                type: string
+                description: Full name of an admin waiting to access the plugin.
+              session_id:
+                type: string
+                description: Session ID of the admin waiting to access the plugin.
+        employee_waiting_list:
+          type: array
+          items:
+            type: object
+            properties:
+              fullname:
+                type: string
+                description: Full name of an employee waiting to access the plugin.
+              session_id:
+                type: string
+                description: Session ID of the employee waiting to access the plugin.
+    LockStateResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/LockState'
+    LockingMode:
+      type: object
+      properties:
+        as_admin:
+          type: boolean
+          description: Indicates if the admin wants to lock the plugin as an admin or not.
+    Locked:
+      type: object
+      properties:
+        locked:
+          type: boolean
+    LockedResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Locked'
+  examples:
+    SuccessBaseResponseExample:
+      value:
+        status: success
+        msg: ''
+    ErrorBaseResponseExample:
+      value:
+        status: error
+        msg: ''
+    UnauthenticatedResponseExample:
+      value:
+        status: unauthorized
+        msg: you are not authenticated to do this action
+    PluginUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you don't have the permission to access the plugin
+    LockUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you are not the one locking the plugin to perform this action
+    NotificationsOverviewResponseExample:
+      value:
+        status: success
+        data:
+          notifications_cnt: 10
+          has_unread_notifications: true
+        msg: ''
+    OrderListUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you are not authorized to access the order list
+    OrderManagementUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you are not authorized to access the order management
+    CarrierListUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you are not authorized to access the carrier list
+    CarrierCredentialsUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you are not authorized to access the credentials of the carrier
+    LockStateSuccessResponseExample:
+      value:
+        status: success
+        data:
+          state: locked
+          locked_by:
+            fullname: Abdallah Ben Chamakh (fake id)
+            is_admin: false
+          admin_waiting_list:
+            - fullname: Alex Hormozi (fake id)
+            - fullname: Russell Brunson (fake id)
+          employee_waiting_list:
+            - fullname: Mohamed Baabit (fake id)
+            - fullname: Grant Cardone (fake id)
+    LockStateRedirectionResponseExample:
+      value:
+        status: redirection
+        data:
+          state: locked
+          locked_by:
+            fullname: Abdallah Ben Chamakh (fake id)
+            is_admin: false
+          admin_waiting_list:
+            - fullname: Alex Hormozi (fake id)
+            - fullname: Russell Brunson (fake id)
+          employee_waiting_list:
+            - fullname: Mohamed Baabit (fake id)
+            - fullname: Grant Cardone (fake id)
+    LockedSuccessResponseExample:
+      value:
+        status: success
+        data:
+          locked: true
+    LockedRedirectionResponseExample:
+      value:
+        status: redirection
+        data:
+          locked: true
+    LockingModeExample:
+      value:
+        as_admin: false
+    LockPluginForciblyUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you can't lock the plugin forcibly because you are not an admin
+    DoubleReservationUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you already did reserve a place in the lock waiting list
+    DoubleReservationCancelingUnauthorizedResponseExample:
+      value:
+        status: unauthorized
+        msg: you already did cancel your reservation from the lock waiting list
+    ExistingRequestRunningResponseExample:
+      value:
+        status: forbidden
+        msg: an existing request is running
+    AlreadyReservedResponseExample:
+      value:
+        status: bad request
+        msg: >-
+          you already did request to reserve a place, just wait for a few
+          seconds and you will appear in the waiting list
+    ReserveWhileLockingResponseExample:
+      value:
+        status: forbidden
+        msg: you can't reserve a place while locking the plugin

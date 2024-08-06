@@ -1,0 +1,75 @@
+LockState :
+  type: object
+  properties:
+    state:
+      type: string
+      enum:
+        - locked
+        - unlocked
+      description: Indicates whether the plugin is locked or unlocked.
+    locked_by:
+      type: object
+      properties:
+        fullname:
+          type: string
+          description: Full name of the person who locked the plugin.
+        session_id:
+          type: string
+          description: Session ID of the person who locked the plugin.
+        is_admin:
+          type: boolean
+          description: Indicates if the person who locked the plugin is an admin.
+    admin_waiting_list:
+      type: array
+      items:
+        type: object
+        properties:
+          fullname:
+            type: string
+            description: Full name of an admin waiting to access the plugin.
+          session_id:
+            type: string
+            description: Session ID of the admin waiting to access the plugin.
+    employee_waiting_list:
+      type: array
+      items:
+        type: object
+        properties:
+          fullname:
+            type: string
+            description: Full name of an employee waiting to access the plugin.
+          session_id:
+            type: string
+            description: Session ID of the employee waiting to access the plugin.
+
+LockStateResponse : 
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/LockState'
+
+LockingMode :  
+  type: object
+  properties:
+    as_admin:
+      type: boolean
+      description: Indicates if the admin wants to lock the plugin as an admin or not.
+
+
+Locked : 
+  type : object 
+  properties :
+    locked :
+      type : boolean 
+
+LockedResponse : 
+  allOf:
+    - $ref: '#/components/schemas/BaseResponse'
+    - type: object
+      properties : 
+        data : 
+          $ref: '#/components/schemas/Locked'
+
+

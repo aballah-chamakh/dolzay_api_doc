@@ -1,0 +1,88 @@
+
+
+LockStateSuccessResponseExample : 
+  value : 
+    status : "success"
+    data : 
+      state: locked
+      locked_by:
+        fullname: Abdallah Ben Chamakh (fake id)
+        is_admin: false
+      admin_waiting_list:
+        - fullname: Alex Hormozi (fake id)
+        - fullname: Russell Brunson (fake id)
+      employee_waiting_list:
+        - fullname: Mohamed Baabit (fake id)
+        - fullname: Grant Cardone (fake id)
+ 
+
+LockStateRedirectionResponseExample : 
+  value : 
+    status : "redirection"
+    data : 
+      state: locked
+      locked_by:
+        fullname: Abdallah Ben Chamakh (fake id)
+        is_admin: false
+      admin_waiting_list:
+        - fullname: Alex Hormozi (fake id)
+        - fullname: Russell Brunson (fake id)
+      employee_waiting_list:
+        - fullname: Mohamed Baabit (fake id)
+        - fullname: Grant Cardone (fake id)
+ 
+
+LockedSuccessResponseExample : 
+  value : 
+    status : "success"
+    data :
+      locked : true
+
+
+LockedRedirectionResponseExample : 
+  value : 
+    status : "redirection"
+    data :
+      locked: true
+
+
+
+
+LockingModeExample : 
+  value :
+    as_admin : false
+
+LockPluginForciblyUnauthorizedResponseExample :
+    value :
+      status : "unauthorized"
+      msg : "you can't lock the plugin forcibly because you are not an admin"
+
+
+DoubleReservationUnauthorizedResponseExample : 
+  value :
+    status : "unauthorized"
+    msg : "you already did reserve a place in the lock waiting list"
+
+DoubleReservationCancelingUnauthorizedResponseExample : 
+  value :
+    status : "unauthorized"
+    msg : "you already did cancel your reservation from the lock waiting list"
+
+
+ExistingRequestRunningResponseExample : 
+  value : 
+    status : "forbidden"
+    msg : "an existing request is running"
+
+AlreadyReservedResponseExample : 
+  value : 
+    status : "bad request"
+    msg : "you already did request to reserve a place, just wait for a few seconds and you will appear in the waiting list"
+
+
+ReserveWhileLockingResponseExample : 
+  value : 
+    status : "forbidden"
+    msg : "you can't reserve a place while locking the plugin"
+
+
